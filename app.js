@@ -9,7 +9,13 @@ const app = express();
 const myCache = new NodeCache(); 
 
 const uri = process.env.MONGODB_URI;
-console.log("MongoDB URI:", uri); 
+
+if (!uri) {
+    console.error('MongoDB URI is not defined in environment variables!');
+    process.exit(1);  // Exit if MongoDB URI is not defined
+}
+
+console.log("MongoDB URI:", uri);  // Be careful with logging sensitive info in production
 
 const client = new MongoClient(uri);
 const port = process.env.PORT || 8080;
@@ -23,7 +29,6 @@ app.use(logger);
 
 async function main() {
     try {
-     
         await client.connect();
         console.log("Connected to MongoDB Atlas");
 
